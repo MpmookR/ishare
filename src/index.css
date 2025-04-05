@@ -1,0 +1,34 @@
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;700&display=swap');
+
+:root {
+  /*Color Palette */
+  --color-bg: #FEF3DF;
+  --color-white: #FFFFFF;
+  --color-black: #000000;
+  --color-primary-blue: #3256D1;
+  --color-primary-orange: #E85C25;
+  --color-primary-green: #024C4B;
+
+  /* Font */
+  --font-body: 'EB Garamond', serif;
+
+  /* 📐 Font Sizes */
+  --font-size-body: 20px;
+  --font-size-footer: 14px;
+  --font-size-h1: 36px;
+  --font-size-h2: 32px;
+
+  /* Font Weights */
+  --font-weight-normal: 400;
+  --font-weight-bold: 700;
+}
+
+/* Apply base styles */
+body {
+  background-color: var(--color-bg);
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  color: var(--color-black);
+  margin: 0;
+  padding: 0;
+}
