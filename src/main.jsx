@@ -8,17 +8,15 @@ import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
-
-
-import { AuthProvider } from './context/AuthContext.jsx'; // Wrap the app with auth context
+import { AppContext, AppProvider } from './context/AppContext.jsx';
 
 // Render the app into the root div in index.html
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <AuthProvider>
+    <AppProvider>
       <BrowserRouter>
         <App />
       </BrowserRouter>
-    </AuthProvider>
+    </AppProvider>
   </React.StrictMode>
 );

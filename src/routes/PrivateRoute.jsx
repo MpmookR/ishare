@@ -2,7 +2,7 @@
 import { useContext } from 'react';
 
 // Import the AuthContext to check user authentication
-import { AuthContext } from '../context/AuthContext';
+import { AppContext } from '../context/AppContext';
 
 // Import Navigate to redirect unauthenticated users
 import { Navigate } from 'react-router-dom';
@@ -10,7 +10,7 @@ import { Navigate } from 'react-router-dom';
 // Define a functional component called PrivateRoute that receives 'children'
 export default function PrivateRoute({ children }) {
   // Get the 'token' from the AuthContext (set after login)
-  const { token } = useContext(AuthContext);
+  const { token } = useContext(AppContext);
 
   // If token exists, render the protected children components
   // If not, redirect to /login page

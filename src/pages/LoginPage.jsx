@@ -1,12 +1,12 @@
 import { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { loginUser } from "../services/authService";
-import { AuthContext } from "../context/AuthContext";
-import TextField from "../components/Auth/TextField";
-import Button from "../components/common/Button";
+import { AppContext } from '../context/AppContext';
+import TextField from "../components/TextField";
+import Button from "../components/Button";
 
 export default function LoginPage() {
-  const { login } = useContext(AuthContext);
+  const { login } = useContext(AppContext);
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

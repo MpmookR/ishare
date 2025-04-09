@@ -1,10 +1,12 @@
-import { createContext, useState, useEffect } from 'react';
+// context/AppCContext.js
+import { createContext, useState } from 'react';
 
-export const AuthContext = createContext();
+export const AppContext = createContext();
 
-export const AuthProvider = ({ children }) => {
+export const AppProvider = ({ children }) => {
   const [user, setUser] = useState(() => JSON.parse(localStorage.getItem('user')));
   const [token, setToken] = useState(() => localStorage.getItem('token'));
+  //localStorage	Keeps user logged in after refresh
 
   const login = (userData, token) => {
     setUser(userData);
@@ -20,8 +22,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout }}>
+    <AppContext.Provider value={{ user, token, login, logout }}>
       {children}
-    </AuthContext.Provider>
+    </AppContext.Provider>
   );
 };

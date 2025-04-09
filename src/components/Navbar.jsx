@@ -1,10 +1,11 @@
 import { FiSearch, FiChevronDown } from "react-icons/fi";
+import { Link } from "react-router-dom";
 
 export default function Navbar() {
   return (
     <>
       <style>
-      {`
+        {`
     .dropdown-toggle::after {
       display: none !important;
     }
@@ -36,7 +37,7 @@ export default function Navbar() {
           gap: 16,
         }}
       >
-        {/* Logo + Brand */}
+        {/* Logo*/}
         <div
           style={{
             overflow: "hidden",
@@ -46,11 +47,13 @@ export default function Navbar() {
             display: "flex",
           }}
         >
-          <img
-            style={{ width: 60, height: 42 }}
-            src="/img/LogoOrange.png"
-            alt="Logo"
-          />
+          <Link to="/" style={{ display: "inline-block" }}>
+            <img
+              style={{ width: 60, height: 42 }}
+              src="/img/LogoOrange.png"
+              alt="Logo"
+            />
+          </Link>
         </div>
 
         {/* Search Bar */}
@@ -124,7 +127,10 @@ export default function Navbar() {
           </a>
 
           {/* Dropdown using custom icon */}
-          <div className="dropdown" style={{ position: "relative", zIndex: 9999 }}>
+          <div
+            className="dropdown"
+            style={{ position: "relative", zIndex: 9999 }}
+          >
             <button
               className="btn dropdown-toggle p-0 border-0 bg-transparent"
               type="button"
@@ -145,11 +151,27 @@ export default function Navbar() {
                 right: 0,
               }}
             >
-              <li><a className="dropdown-item" href="/profile">Profile</a></li>
-              <li><a className="dropdown-item" href="/my-recipes">My Recipes</a></li>
-              <li><a className="dropdown-item" href="/saved">Saved</a></li>
-              <li><hr className="dropdown-divider" /></li>
-              <li><a className="dropdown-item" href="/login">Logout</a></li>
+              <li>
+                <Link to="/my-recipes" className="dropdown-item">
+                  My Recipes
+                </Link>
+              </li>
+
+              <li>
+                <Link to="/saved" className="dropdown-item">
+                  Saved
+                </Link>
+              </li>
+
+              <li>
+                <hr className="dropdown-divider" />
+              </li>
+
+              <li>
+                <Link to="/login" className="dropdown-item">
+                  Logout
+                </Link>
+              </li>
             </ul>
           </div>
         </div>

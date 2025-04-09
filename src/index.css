@@ -17,6 +17,8 @@
   --font-size-footer: 14px;
   --font-size-h1: 36px;
   --font-size-h2: 32px;
+  --font-size-h3: 28px;
+
 
   /* Font Weights */
   --font-weight-normal: 400;
@@ -46,3 +48,40 @@ body {
 .dropdown-item {
   transition: background-color 0.2s ease, color 0.2s ease;
 }
+
+/* WebKit Browsers (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+  height: 12px;
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-primary-blue);
+  border-radius: 10px;
+  border: 2px solid var(--color-bg);
+}
+
+.custom-scroll::-webkit-scrollbar {
+  height: 10px;
+}
+.custom-scroll::-webkit-scrollbar-thumb {
+  background-color: var(--color-primary-blue);
+  border-radius: 10px;
+}
+
+.highlight-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.highlight-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+}
+
+
+
