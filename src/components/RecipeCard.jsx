@@ -1,8 +1,7 @@
-import { FaHeart, FaRegBookmark, FaStar } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import LikeSavedActions from "./LikeSavedAction";
 
-export default function RecipeCard({ recipe }) {
+export default function RecipeCard({ recipe, showDelete = false, onDelete }) {
   const navigate = useNavigate();
 
   return (
@@ -92,12 +91,13 @@ export default function RecipeCard({ recipe }) {
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <div
               style={{
-                color: "var(--color-primary-blue)",
+                color: "var(--color-black)",
                 fontSize: 18,
                 fontFamily: "var(--font-body)",
+                fontWeight: 400,
               }}
             >
-              Post by @{recipe.UserName || "username"}
+              Post by @ <strong>{recipe.UserName || "anonymous user"}</strong>
             </div>
           </div>
         </div>
@@ -134,6 +134,27 @@ export default function RecipeCard({ recipe }) {
           >
             View
           </button>
+
+          {showDelete && (
+            <button
+            onClick={() => onDelete(recipe.RecipeId)}
+            style={{
+                marginLeft: 16,
+                padding: 10,
+                backgroundColor: "transparent",
+                color: "black",
+                border: "1.5px solid red",
+                borderRadius: 21,
+                width: 120,
+                fontSize: 16,
+                fontWeight: 500,
+                fontFamily: "var(--font-body)",
+                cursor: "pointer",
+              }}
+            >
+              Delete
+            </button>
+          )}
         </div>
       </div>
     </div>

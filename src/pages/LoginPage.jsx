@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { loginUser } from "../services/authService";
-import { AppContext } from '../context/AppContext';
+import { AppContext } from "../context/AppContext";
 import TextField from "../components/TextField";
 import Button from "../components/Button";
 
@@ -15,37 +15,44 @@ export default function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const data = await loginUser(email, password);
-      login(data, data.token);
+      const { userData, token } = await loginUser(email, password);
+      alert("Login successful!");
+      login(userData, token);
       navigate("/");
-    } catch {
+    } catch (err) {
+      console.error("Login failed:", err);
       setError("Invalid login.");
     }
   };
 
   return (
     <div className="container-fluid p-0">
-      <div className="row g-0" style={{ height: '100vh', overflow: 'hidden' }}>
-    
-    {/* Image Column */}        
-      <div  
-      
-      className="col-md-6 d-none d-md-block"
-      style={{ height: '100vh', overflow: 'hidden' }} 
-      >
-      <img
-            src="/img/preview.png" alt="Food preview"
-            style={{ width: "100%", height: "100%", objectFit: "cover", display: 'block' }}/>
-      </div>
-    
-    {/*Form Column */}
+      <div className="row g-0" style={{ height: "100vh", overflow: "hidden" }}>
+        {/* Image Column */}
+        <div
+          className="col-md-6 d-none d-md-block"
+          style={{ height: "100vh", overflow: "hidden" }}
+        >
+          <img
+            src="/img/preview.png"
+            alt="Food preview"
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              display: "block",
+            }}
+          />
+        </div>
+
+        {/*Form Column */}
 
         <div
           className="col-md-6 d-flex align-items-center justify-content-center"
-          style={{ 
+          style={{
             backgroundColor: "var(--color-bg)",
-            height: '100vh', // ensures this column fills screen height
-            overflow: 'hidden' // prevents scrollbars
+            height: "100vh", // ensures this column fills screen height
+            overflow: "hidden", // prevents scrollbars
           }}
         >
           <div style={{ width: "100%", maxWidth: 400 }}>

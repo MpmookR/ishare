@@ -39,7 +39,7 @@ export default function CategorySelector({ selectedCategory, onSelect }) {
                   style={{
                     width: 60,
                     height: 60,
-                    borderRadius: "50%", // ensures perfect circle
+                    borderRadius: "50%", 
                     objectFit: "cover",
                     backgroundColor: "#f5f5f5",
                   }}

@@ -1,7 +1,26 @@
 import { FiSearch, FiChevronDown } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useContext } from "react";
+import { AppContext } from "../context/AppContext";
 
 export default function Navbar() {
+  const { user } = useContext(AppContext);
+
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const profileImage = user?.profileImage || "/img/profile/profileDefault.jpg";
+
+  const handleSearch = () => {
+    if (searchQuery.trim() !== "") {
+      navigate(`/search?query=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") handleSearch();
+  };
+
   return (
     <>
       <style>
@@ -25,8 +44,8 @@ export default function Navbar() {
       </style>
 
       <div
-        className="container d-flex justify-content-between align-items-center py-4 border-bottom flex-wrap"
-        style={{
+  className="container d-flex justify-content-between align-items-center py-4 border-bottom flex-wrap"
+  style={{
           width: "100%",
           paddingTop: 56,
           paddingBottom: 16,
@@ -79,6 +98,9 @@ export default function Navbar() {
           <input
             type="text"
             placeholder="looking for recipe...?"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={handleKeyDown}
             style={{
               width: "100%",
               height: "100%",
@@ -104,78 +126,75 @@ export default function Navbar() {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
+              cursor: "pointer",
             }}
+            onClick={handleSearch}
           >
             <FiSearch size={20} color="var(--color-bg)" />
           </div>
-        </div>
+          </div>
 
-        {/* Avatar Link + Dropdown Menu */}
-        <div className="d-flex align-items-center gap-3">
-          {/* Avatar as profile link */}
-          <a href="/profile">
-            <img
-              style={{
-                width: 42,
-                height: 42,
-                borderRadius: "9999px",
-                outline: "3px var(--color-primary-orange) solid",
-              }}
-              src="https://placehold.co/42x42"
-              alt="User"
-            />
-          </a>
 
-          {/* Dropdown using custom icon */}
-          <div
-            className="dropdown"
-            style={{ position: "relative", zIndex: 9999 }}
-          >
-            <button
-              className="btn dropdown-toggle p-0 border-0 bg-transparent"
-              type="button"
-              id="dropdownMenuButton"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
+          {/* Avatar Link + Dropdown Menu */}
+          <div className="d-flex align-items-center gap-3">
+            {/* Avatar as profile link */}
+            <Link to="/myRecipe">
+              <img
+                style={{
+                  width: 42,
+                  height: 42,
+                  borderRadius: "9999px",
+                  outline: "3px var(--color-primary-orange) solid",
+                }}
+                src={profileImage}
+                alt="User"
+              />
+            </Link>
+
+            {/* Dropdown using custom icon */}
+            <div
+              className="dropdown"
+              style={{ position: "relative", zIndex: 9999 }}
             >
-              <FiChevronDown size={20} color="var(--color-primary-orange)" />
-            </button>
+              <button
+                className="btn dropdown-toggle p-0 border-0 bg-transparent"
+                type="button"
+                id="dropdownMenuButton"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <FiChevronDown size={20} color="var(--color-primary-orange)" />
+              </button>
 
-            <ul
-              className="dropdown-menu dropdown-menu-end mt-2"
-              aria-labelledby="dropdownMenuButton"
-              style={{
-                zIndex: 9999,
-                position: "absolute",
-                top: "100%",
-                right: 0,
-              }}
-            >
-              <li>
-                <Link to="/my-recipes" className="dropdown-item">
-                  My Recipes
-                </Link>
-              </li>
+              <ul
+                className="dropdown-menu dropdown-menu-end mt-2"
+                aria-labelledby="dropdownMenuButton"
+                style={{
+                  zIndex: 9999,
+                  position: "absolute",
+                  top: "100%",
+                  right: 0,
+                }}
+              >
+                <li>
+                  <Link to="/myRecipe" className="dropdown-item">
+                    My Recipes
+                  </Link>
+                </li>
 
-              <li>
-                <Link to="/saved" className="dropdown-item">
-                  Saved
-                </Link>
-              </li>
+                <li>
+                  <hr className="dropdown-divider" />
+                </li>
 
-              <li>
-                <hr className="dropdown-divider" />
-              </li>
-
-              <li>
-                <Link to="/login" className="dropdown-item">
-                  Logout
-                </Link>
-              </li>
-            </ul>
+                <li>
+                  <Link to="/login" className="dropdown-item">
+                    Logout
+                  </Link>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
     </>
   );
 }

@@ -25,7 +25,7 @@ export default function HeroSection() {
         {/* Right: Share Your Recipe Card */}
         <div className="col-lg-4 col-md-6 col-sm-10 d-none d-sm-block">
           <div
-            onClick={() => navigate("/create-recipe")}
+            onClick={() => navigate("/create")}
             style={{
               cursor: "pointer",
               borderRadius: "21px",

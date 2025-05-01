@@ -64,6 +64,7 @@ export default function HomePage() {
 
   return (
     <div style={{ backgroundColor: "var(--color-bg)", minHeight: "100vh" }}>
+      
       <Navbar />
 
       <HeroSection />
@@ -143,52 +144,51 @@ export default function HomePage() {
             </div>
 
             {/* Pagination Controls */}
-<div
-  className="container mt-4"
-  style={{
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    flexWrap: "wrap",
-    gap: 16,
-  }}
->
-  {/* Previous */}
-  <PaginationButton
-    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-    disabled={currentPage === 1}
-    icon={<FaArrowLeft size={24} />}
-    text="Back"
-  />
+            <div
+              className="container mt-4"
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                flexWrap: "wrap",
+                gap: 16,
+              }}
+            >
+              {/* Previous */}
+              <PaginationButton
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                icon={<FaArrowLeft size={24} />}
+                text="Back"
+              />
 
-  {/* Page number */}
-  <div
-    style={{
-      fontFamily: "var(--font-body)",
-      fontSize: 18,
-      fontWeight: 500,
-      color: "black",
-      textAlign: "center",
-      flexGrow: 1,
-    }}
-  >
-    Page {currentPage} of {totalPages}
-  </div>
+              {/* Page number */}
+              <div
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: 18,
+                  fontWeight: 500,
+                  color: "black",
+                  textAlign: "center",
+                  flexGrow: 1,
+                }}
+              >
+                Page {currentPage} of {totalPages}
+              </div>
 
-  {/* Next */}
-  <div style={{ marginLeft: "auto" }}>
-    <PaginationButton
-      onClick={() =>
-        setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-      }
-      disabled={currentPage === totalPages}
-      icon={<FaArrowRight size={24} />}
-      text="Next"
-      reverse
-    />
-  </div>
-</div>
-
+              {/* Next */}
+              <div style={{ marginLeft: "auto" }}>
+                <PaginationButton
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                  }
+                  disabled={currentPage === totalPages}
+                  icon={<FaArrowRight size={24} />}
+                  text="Next"
+                  reverse
+                />
+              </div>
+            </div>
           </>
         )}
       </section>
