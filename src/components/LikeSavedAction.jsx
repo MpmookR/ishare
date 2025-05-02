@@ -1,46 +1,55 @@
 import { useContext, useState } from "react";
 import { FaHeart, FaRegHeart, FaBookmark, FaRegBookmark } from "react-icons/fa";
 import { saveRecipe, deleteSavedRecipe } from "../services/savedService"; 
+import { likeRecipe, unlikeRecipe } from "../services/likeService";
 import { AppContext } from "../context/AppContext";
 
 export default function LikeSavedActions({
   recipeId,
   savedRecipeId = null,
-  defaultLiked = false,
+  likedByCurrentUser = false,
   defaultSaved = false,
   iconColor = "black",
   iconSize = 24,
   onSaveToggle = () => {},
   onLikeToggle = () => {},
 }) {
-  const { token } = useContext(AppContext); 
-  const [liked, setLiked] = useState(defaultLiked); // need to work on it later
+  const { user, token } = useContext(AppContext); 
+  const [liked, setLiked] = useState(likedByCurrentUser); 
   const [saved, setSaved] = useState(defaultSaved);
 
   const handleSaveClick = async () => {
     if (!token) return alert("Login required to save recipes.");
-
     try {
       if (saved) {
-        // Unsave
         await deleteSavedRecipe(savedRecipeId, token);
         setSaved(false);
-        onSaveToggle();
+        onSaveToggle(false); // optional: pass false for unsaved
       } else {
-        // Save
         await saveRecipe(recipeId, token);
         setSaved(true);
-        onSaveToggle();
+        onSaveToggle(true); // optional: pass true for saved
       }
     } catch (err) {
       console.error("Save toggle failed:", err);
     }
   };
 
-  const handleLikeClick = () => {
-    const newLiked = !liked;
-    setLiked(newLiked);
-    onLikeToggle(newLiked);
+  const handleLikeClick = async () => {
+    if (!token || !user?.Id) return alert("Login required to like recipes.");
+    try {
+      if (liked) {
+        await unlikeRecipe(recipeId, user.Id, token); 
+        setLiked(false);
+        onLikeToggle(false); // notify parent
+      } else {
+        await likeRecipe(recipeId, token); 
+        setLiked(true);
+        onLikeToggle(true); // notify parent
+      }
+    } catch (err) {
+      console.error("Like toggle failed:", err);
+    }
   };
 
   return (

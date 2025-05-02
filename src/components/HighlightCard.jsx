@@ -1,12 +1,21 @@
 import { useNavigate } from "react-router-dom";
 import LikeSavedActions from "./LikeSavedAction";
+import { useContext } from "react";
+import { AppContext } from "../context/AppContext";
 
 export default function HighlightCard({
   recipe,
   variant = "blue",
-  onSaveToggle = () => {}, // support refreshData from parent
+  onSaveToggle = () => {},
+  onLikeToggle = () => {},
 }) {
   const navigate = useNavigate();
+  const { user } = useContext(AppContext);
+
+  const likedByCurrentUser =
+    Array.isArray(recipe.Likes) && user?.Id
+      ? recipe.Likes.some((l) => l.UserId === user.Id)
+      : false;
 
   const bgColor =
     variant === "blue"
@@ -28,7 +37,7 @@ export default function HighlightCard({
         flex: "1 1 300px",
         cursor: "pointer",
       }}
-      onClick={() => navigate(`/recipe/${recipe.RecipeId}`)} // navigate on card click
+      onClick={() => navigate(`/recipe/${recipe.RecipeId}`)}
     >
       <div
         style={{
@@ -138,10 +147,11 @@ export default function HighlightCard({
                 recipeId={recipe.RecipeId}
                 savedRecipeId={recipe.SavedRecipeId}
                 defaultSaved={!!recipe.SavedRecipeId}
-                initialSaved={true}
-                iconColor="white"
+                likedByCurrentUser={likedByCurrentUser}
+                onSaveToggle={onSaveToggle}
+                onLikeToggle={onLikeToggle}
+                iconColor="black"
                 iconSize={24}
-                onSaveToggle={onSaveToggle} // triggers refreshData from HomePage
               />
             </div>
           </div>

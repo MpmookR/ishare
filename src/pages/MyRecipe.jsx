@@ -32,7 +32,7 @@ export default function MyRecipe() {
     setDataVersion((v) => v + 1);
   }, []);
 
- // Fetches recipe list and matches them with saved ones
+ // Fetches recipe list 
  useEffect(() => {
   const load = async () => {
     try {
@@ -45,10 +45,15 @@ export default function MyRecipe() {
 
       const recipesWithSavedState = allRecipes.map((r) => {
         const match = savedRecipeRefs.find((s) => s.RecipeId === r.RecipeId);
+        const likedByCurrentUser = Array.isArray(r.Likes) && user?.Id
+        ? r.Likes.some((l) => l.UserId === user.Id)
+        : false;
+
         return {
           ...r,
           defaultSaved: !!match, // used by LikeSavedActions
           SavedRecipeId: match?.SavedRecipeId || null, // for unsave
+          likedByCurrentUser, 
         };
       });
 
@@ -99,11 +104,17 @@ export default function MyRecipe() {
   };
 
   return (
-    <div style={{ backgroundColor: "var(--color-bg)", minHeight: "100vh" }}>
+    <div     
+    style={{
+      backgroundColor: "var(--color-bg)",
+      minHeight: "100vh",
+      display: "flex",
+      flexDirection: "column",
+    }}>
       <Navbar />
 
-      <div className="container py-5">
-        {/* Profile Header */}
+      <div className="container py-5" style={{ flex: 1 }}>
+        
         <ProfileSection
           user={user}
           profileImage={profileImage}
@@ -159,6 +170,8 @@ export default function MyRecipe() {
                 showDelete={viewMode === "my"}
                 onDelete={handleDelete}
                 onSaveToggle={refreshData} //Trigger refresh after unsave/save
+                onLikeToggle={refreshData} 
+
               />
             ))
           ) : (

@@ -1,8 +1,22 @@
 import { useNavigate } from "react-router-dom";
 import LikeSavedActions from "./LikeSavedAction";
+import { useContext } from "react";
+import { AppContext } from "../context/AppContext";
 
-export default function RecipeCard({ recipe, showDelete = false, onDelete, onSaveToggle = () => {} }) {
+export default function RecipeCard({
+  recipe,
+  showDelete = false,
+  onDelete,
+  onSaveToggle = () => {},
+  onLikeToggle = () => {},
+}) {
   const navigate = useNavigate();
+  const { user } = useContext(AppContext);
+
+  const likedByCurrentUser =
+    Array.isArray(recipe.Likes) && user?.Id
+      ? recipe.Likes.some((l) => l.UserId === user.Id)
+      : false;
 
   return (
     <div
@@ -20,7 +34,6 @@ export default function RecipeCard({ recipe, showDelete = false, onDelete, onSav
         backgroundColor: "var(--color-bg)",
       }}
     >
-      {/* Recipe Image */}
       <img
         src={recipe.Image || "https://placehold.co/407x326"}
         alt={recipe.Name}
@@ -33,7 +46,6 @@ export default function RecipeCard({ recipe, showDelete = false, onDelete, onSav
         }}
       />
 
-      {/* Right Section */}
       <div
         style={{
           flex: "1 1 600px",
@@ -43,7 +55,6 @@ export default function RecipeCard({ recipe, showDelete = false, onDelete, onSav
           gap: 24,
         }}
       >
-        {/* Header: Title + Stars + Icons */}
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <h3
             style={{
@@ -60,18 +71,18 @@ export default function RecipeCard({ recipe, showDelete = false, onDelete, onSav
 
           <div style={{ display: "flex", gap: 20, alignItems: "center" }}>
             <LikeSavedActions
-              recipeId={recipe.RecipeId}               // used to save
-              savedRecipeId={recipe.SavedRecipeId}     // used to unsave
-              defaultSaved={!!recipe.SavedRecipeId}    //ensures it converts to a boolean
-              initialSaved={true}
+              recipeId={recipe.RecipeId}
+              savedRecipeId={recipe.SavedRecipeId}
+              defaultSaved={!!recipe.SavedRecipeId}
+              likedByCurrentUser={likedByCurrentUser}
               onSaveToggle={onSaveToggle}
+              onLikeToggle={onLikeToggle}
               iconColor="black"
               iconSize={24}
             />
           </div>
         </div>
 
-        {/* Category + User */}
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <div
             style={{
@@ -101,7 +112,6 @@ export default function RecipeCard({ recipe, showDelete = false, onDelete, onSav
           </div>
         </div>
 
-        {/* Intro Text */}
         <p
           style={{
             fontSize: 20,
@@ -111,10 +121,9 @@ export default function RecipeCard({ recipe, showDelete = false, onDelete, onSav
           }}
         >
           {recipe.Intro ||
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua..."}
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit..."}
         </p>
 
-        {/* View Button */}
         <div style={{ display: "flex", justifyContent: "flex-end" }}>
           <button
             onClick={() => navigate(`/recipe/${recipe.RecipeId}`)}
@@ -136,8 +145,8 @@ export default function RecipeCard({ recipe, showDelete = false, onDelete, onSav
 
           {showDelete && (
             <button
-            onClick={() => onDelete(recipe.RecipeId)}
-            style={{
+              onClick={() => onDelete(recipe.RecipeId)}
+              style={{
                 marginLeft: 16,
                 padding: 10,
                 backgroundColor: "transparent",

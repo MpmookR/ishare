@@ -18,7 +18,7 @@ export const fetchRecipes = async () => {
  */
 export const createRecipe = async (recipeData, token) => {
   try {
-    console.log("📝 Creating recipe with data:", recipeData);
+    console.log("Creating recipe with data:", recipeData);
     const response = await api.post('/Recipes', recipeData, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -43,18 +43,18 @@ export const fetchRecipeById = async (id) => {
 export const deleteRecipe = async (recipeId, token) => {
   try {
 
-    console.log("🔑 Token being sent:", token); // Add this line
-    console.log("🔗 Endpoint:", `/Recipes/${recipeId}`); // Add this line
+    console.log("Token being sent:", token); // Add this line
+    console.log("Endpoint:", `/Recipes/${recipeId}`); // Add this line
 
     const response = await api.delete(`/Recipes/${recipeId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log("✅ Delete response:", response);
+    console.log(" Delete response:", response);
     return response.data;
   } catch (err) {
-    console.error("❌ deleteRecipe failed:", err.message);
+    console.error("deleteRecipe failed:", err.message);
     if (err.response) {
       console.error("Status:", err.response.status);
       console.error("Data:", err.response.data);

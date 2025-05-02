@@ -113,6 +113,7 @@ export default function HomePage() {
                   SavedRecipeId: r.SavedRecipes?.find(
                     (sr) => sr.UserId === user.Id
                   )?.SavedRecipeId,
+                  likedByCurrentUser: r.Likes?.some((l) => l.UserId === user.Id),
                 }}
                 onSaveToggle={refreshData}
                 variant={index % 2 !== 0 ? "green" : "blue"}
@@ -158,6 +159,7 @@ export default function HomePage() {
                     SavedRecipeId: r.SavedRecipes?.find(
                       (sr) => sr.UserId === user.Id
                     )?.SavedRecipeId,
+                    likedByCurrentUser: r.Likes?.some((l) => l.UserId === user.Id),
                   }}
                   onSaveToggle={refreshData} //refresh callback
                 />

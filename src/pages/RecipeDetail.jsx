@@ -1,32 +1,60 @@
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext, useCallback } from "react";
 import { fetchRecipeById } from "../services/recipeService";
-
+import { fetchSavedRecipes } from "../services/savedService";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import LikeSavedActions from "../components/LikeSavedAction";
+import { AppContext } from "../context/AppContext";
 
 export default function RecipeDetail() {
   const { id } = useParams();
+  const { user, token } = useContext(AppContext);
   const [recipe, setRecipe] = useState(null);
+  const [dataVersion, setDataVersion] = useState(0); // used to trigger refresh
+
+  const refreshData = useCallback(() => {
+    setDataVersion((v) => v + 1);
+  }, []);
 
   useEffect(() => {
     async function loadRecipe() {
       try {
         const data = await fetchRecipeById(id);
-        setRecipe(data);
+
+        let savedRecipeRefs = [];
+        if (user?.Id && token) {
+          savedRecipeRefs = await fetchSavedRecipes(user.Id, token);
+        }
+
+        const match = savedRecipeRefs.find(
+          (s) => s.RecipeId === data.RecipeId
+        );
+
+        const likedByCurrentUser =
+          Array.isArray(data.Likes) && user?.Id
+            ? data.Likes.some((l) => l.UserId === user.Id)
+            : false;
+
+        setRecipe({
+          ...data,
+          defaultSaved: !!match,
+          SavedRecipeId: match?.SavedRecipeId || null,
+          likedByCurrentUser,
+        });
       } catch (error) {
         console.error("Error fetching recipe by ID:", error);
       }
     }
 
     loadRecipe();
-  }, [id]);
+  }, [id, user?.Id, token, dataVersion]);
 
   if (!recipe) return <p>Loading recipe...</p>;
 
   return (
-    <div style={{
+    <div
+      style={{
         backgroundColor: "var(--color-bg)",
         minHeight: "100vh",
         display: "flex",
@@ -67,10 +95,9 @@ export default function RecipeDetail() {
               flex: "1 1 50%",
               display: "flex",
               flexDirection: "column",
-              justifyContent: "space-between", // Push post info to bottom
+              justifyContent: "space-between",
             }}
           >
-            {/* Top: Title & Intro */}
             <div className="d-flex flex-column gap-4">
               <h2
                 style={{
@@ -113,14 +140,14 @@ export default function RecipeDetail() {
               </div>
 
               <LikeSavedActions
+                recipeId={recipe.RecipeId}
+                savedRecipeId={recipe.SavedRecipeId}
+                defaultSaved={recipe.defaultSaved}
+                likedByCurrentUser={recipe.likedByCurrentUser}
+                onSaveToggle={refreshData}
+                onLikeToggle={refreshData}
                 iconColor="var(--color-black)"
                 iconSize={24}
-                onLikeToggle={(liked) => {
-                  console.log("Liked?", liked);
-                }}
-                onSaveToggle={(saved) => {
-                  console.log("Saved?", saved);
-                }}
               />
             </div>
           </div>
@@ -172,6 +199,7 @@ export default function RecipeDetail() {
               </ul>
             </div>
           </div>
+
           {/* How To */}
           <div className="col-md-6">
             <div
@@ -207,7 +235,7 @@ export default function RecipeDetail() {
                   lineHeight: "28px",
                   color: "black",
                   margin: 0,
-                  whiteSpace: "pre-line", // handles newlines if provided
+                  whiteSpace: "pre-line",
                 }}
               >
                 {recipe.HowTo}
