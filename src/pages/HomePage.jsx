@@ -1,7 +1,8 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import { fetchRecipes } from "../services/recipeService";
+import { fetchSavedRecipes } from "../services/savedService";
 import Navbar from "../components/Navbar";
 import HeroSection from "../components/HeroSection";
 import Footer from "../components/Footer";
@@ -12,13 +13,19 @@ import PaginationButton from "../components/PaginationButton";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 export default function HomePage() {
-  const { logout } = useContext(AppContext);
+  const { user, token, logout } = useContext(AppContext);
   const navigate = useNavigate();
   const [recipes, setRecipes] = useState([]);
   const [featuredRecipes, setFeaturedRecipes] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("All");
-  // Filtered recipes pagination
+  const [savedRecipes, setSavedRecipes] = useState([]);
+  const [dataVersion, setDataVersion] = useState(0); // triggers re-fetch
+  const refreshData = useCallback(() => {
+    setDataVersion((v) => v + 1);
+  }, []);
+  
 
+  // Filtered recipes pagination
   const [currentPage, setCurrentPage] = useState(1);
   const recipesPerPage = 10;
 
@@ -40,31 +47,30 @@ export default function HomePage() {
   };
 
   useEffect(() => {
-    const loadRecipes = async () => {
+    const loadData = async () => {
       try {
-        const data = await fetchRecipes();
+        const recipesData = await fetchRecipes();
+        setRecipes(recipesData);
 
-        if (Array.isArray(data)) {
-          setRecipes(data);
+        const sortedByLikes = [...recipesData].sort(
+          (a, b) => (b.likeCount || 0) - (a.likeCount || 0)
+        );
+        setFeaturedRecipes(sortedByLikes.slice(0, 6));
 
-          const sortedByLikes = [...data].sort(
-            (a, b) => (b.likeCount || 0) - (a.likeCount || 0)
-          );
-          setFeaturedRecipes(sortedByLikes.slice(0, 6));
-        } else {
-          console.error("Unexpected API response: not an array", data);
+        if (user && token) {
+          const savedData = await fetchSavedRecipes(user.Id, token);
+          setSavedRecipes(savedData);
         }
       } catch (error) {
-        console.error("API call failed:", error);
+        console.error("Failed to load data:", error);
       }
     };
 
-    loadRecipes();
-  }, []);
+    loadData();
+  }, [user, token, dataVersion]);
 
   return (
     <div style={{ backgroundColor: "var(--color-bg)", minHeight: "100vh" }}>
-      
       <Navbar />
 
       <HeroSection />
@@ -100,12 +106,15 @@ export default function HomePage() {
               <HighlightCard
                 key={`${r.RecipeId}-${index}`}
                 recipe={{
-                  Name: r.Name,
-                  Image: r.Image,
-                  Intro: r.Intro,
-                  UserName: r.UserName,
-                  RecipeId: r.RecipeId,
+                  ...r,
+                  defaultSaved: r.SavedRecipes?.some(
+                    (sr) => sr.UserId === user.Id
+                  ),
+                  SavedRecipeId: r.SavedRecipes?.find(
+                    (sr) => sr.UserId === user.Id
+                  )?.SavedRecipeId,
                 }}
+                onSaveToggle={refreshData}
                 variant={index % 2 !== 0 ? "green" : "blue"}
               />
             ))}
@@ -139,7 +148,19 @@ export default function HomePage() {
           <>
             <div className="d-flex flex-wrap justify-content-center gap-4 mt-4">
               {currentRecipes.map((r) => (
-                <RecipeCard key={r.RecipeId} recipe={r} />
+                <RecipeCard
+                  key={r.RecipeId}
+                  recipe={{
+                    ...r,
+                    defaultSaved: r.SavedRecipes?.some(
+                      (sr) => sr.UserId === user.Id
+                    ),
+                    SavedRecipeId: r.SavedRecipes?.find(
+                      (sr) => sr.UserId === user.Id
+                    )?.SavedRecipeId,
+                  }}
+                  onSaveToggle={refreshData} //refresh callback
+                />
               ))}
             </div>
 

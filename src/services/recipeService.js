@@ -12,18 +12,24 @@ export const fetchRecipes = async () => {
   }
 };
 
+
+/**
+ * Create a new recipe (requires token)
+ */
 export const createRecipe = async (recipeData, token) => {
   try {
-    // console.log("Sending token:", token);
+    console.log("📝 Creating recipe with data:", recipeData);
     const response = await api.post('/Recipes', recipeData, {
       headers: {
         Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
       },
     });
+    console.log("Recipe created:", response.data);
     return response.data;
   } catch (err) {
     console.error('createRecipe failed:', err.message, err.response);
-    throw err;
+    throw new Error(err.response?.data?.message || 'Failed to create recipe.');
   }
 };
 

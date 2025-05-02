@@ -1,31 +1,13 @@
-import { useState } from "react";
-import { FaHeart, FaRegHeart, FaBookmark, FaRegBookmark } from "react-icons/fa";
-import { saveRecipe } from "../services/saveRecipeService";
+import { useNavigate } from "react-router-dom";
 import LikeSavedActions from "./LikeSavedAction";
 
-// Props: recipe (object), variant (either 'blue' or 'green')
 export default function HighlightCard({
   recipe,
   variant = "blue",
-  defaultSaved = false,
+  onSaveToggle = () => {}, // support refreshData from parent
 }) {
-  const [liked, setLiked] = useState(false);
-  const [saved, setSaved] = useState(defaultSaved);
+  const navigate = useNavigate();
 
-  const handleSave = async () => {
-    if (!saved) {
-      try {
-        await saveRecipe(recipe.RecipeId, token);
-        setSaved(true);
-      } catch (error) {
-        console.error("Failed to save recipe:", error);
-      }
-    } else {
-      setSaved(false); // optional: toggle off
-    }
-  };
-
-  // Define background color based on variant
   const bgColor =
     variant === "blue"
       ? "var(--color-primary-blue)"
@@ -44,9 +26,10 @@ export default function HighlightCard({
         overflow: "hidden",
         position: "relative",
         flex: "1 1 300px",
+        cursor: "pointer",
       }}
+      onClick={() => navigate(`/recipe/${recipe.RecipeId}`)} // navigate on card click
     >
-      {/* Inner layout wrapper */}
       <div
         style={{
           padding: 24,
@@ -57,7 +40,7 @@ export default function HighlightCard({
           boxSizing: "border-box",
         }}
       >
-        {/* Image Section */}
+        {/* Image */}
         <img
           src={recipe.Image || "https://placehold.co/335x260"}
           alt={recipe.Name}
@@ -70,7 +53,7 @@ export default function HighlightCard({
           }}
         />
 
-        {/* Content below the image */}
+        {/* Content */}
         <div
           style={{
             flex: "1 1 0",
@@ -80,12 +63,11 @@ export default function HighlightCard({
             alignItems: "center",
           }}
         >
-          {/* Title & Description */}
+          {/* Title + Description */}
           <div
             className="d-flex flex-column align-items-center gap-3"
             style={{ width: "100%" }}
           >
-            {/* Recipe Title */}
             <h3
               style={{
                 fontSize: "var(--font-size-h3)",
@@ -105,7 +87,6 @@ export default function HighlightCard({
               {recipe.Name || "Untitled Recipe"}
             </h3>
 
-            {/* Recipe Description */}
             <div
               style={{
                 width: "100%",
@@ -128,13 +109,12 @@ export default function HighlightCard({
                   wordWrap: "break-word",
                 }}
               >
-                {recipe.Intro ||
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua..."}
+                {recipe.Intro || "Delicious recipe description here..."}
               </p>
             </div>
           </div>
 
-          {/* Footer row (user and icons) */}
+          {/* Footer row */}
           <div
             className="d-flex justify-content-between w-100"
             style={{ alignItems: "center" }}
@@ -150,15 +130,18 @@ export default function HighlightCard({
               <span>@{recipe.UserName || "username"}</span>
             </div>
 
-            <div className="d-flex gap-4">
+            <div
+              className="d-flex gap-4"
+              onClick={(e) => e.stopPropagation()} // prevent page nav
+            >
               <LikeSavedActions
-                initialLiked={false}
-                initialSaved={false}
-                iconColor="var(--color-bg)"
-                onSaveToggle={(newSaved) => {
-                  // Optionally trigger save API
-                  if (newSaved) saveRecipe(recipe.RecipeId, token);
-                }}
+                recipeId={recipe.RecipeId}
+                savedRecipeId={recipe.SavedRecipeId}
+                defaultSaved={!!recipe.SavedRecipeId}
+                initialSaved={true}
+                iconColor="white"
+                iconSize={24}
+                onSaveToggle={onSaveToggle} // triggers refreshData from HomePage
               />
             </div>
           </div>

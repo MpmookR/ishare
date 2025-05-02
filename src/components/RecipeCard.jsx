@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import LikeSavedActions from "./LikeSavedAction";
 
-export default function RecipeCard({ recipe, showDelete = false, onDelete }) {
+export default function RecipeCard({ recipe, showDelete = false, onDelete, onSaveToggle = () => {} }) {
   const navigate = useNavigate();
 
   return (
@@ -60,14 +60,13 @@ export default function RecipeCard({ recipe, showDelete = false, onDelete }) {
 
           <div style={{ display: "flex", gap: 20, alignItems: "center" }}>
             <LikeSavedActions
-              iconColor="var(--color-black)"
-              iconSize={24} // or 36 or whatever you like
-              onLikeToggle={(liked) => {
-                console.log("Liked?", liked);
-              }}
-              onSaveToggle={(saved) => {
-                console.log("Saved?", saved);
-              }}
+              recipeId={recipe.RecipeId}               // used to save
+              savedRecipeId={recipe.SavedRecipeId}     // used to unsave
+              defaultSaved={!!recipe.SavedRecipeId}    //ensures it converts to a boolean
+              initialSaved={true}
+              onSaveToggle={onSaveToggle}
+              iconColor="black"
+              iconSize={24}
             />
           </div>
         </div>

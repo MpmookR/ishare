@@ -1,44 +1,67 @@
+import { useContext, useState } from "react";
 import { FaHeart, FaRegHeart, FaBookmark, FaRegBookmark } from "react-icons/fa";
-import { useState } from "react";
+import { saveRecipe, deleteSavedRecipe } from "../services/savedService"; 
+import { AppContext } from "../context/AppContext";
 
 export default function LikeSavedActions({
-    initialLiked = false,
-    initialSaved = false,
-    onLikeToggle,
-    onSaveToggle,
-    iconColor = "var(--color-bg)",
-    iconSize = 18, 
-  }) {
-    const [liked, setLiked] = useState(initialLiked);
-    const [saved, setSaved] = useState(initialSaved);
-  
-    const handleLike = () => {
-      setLiked(!liked);
-      if (onLikeToggle) onLikeToggle(!liked);
-    };
-  
-    const handleSave = () => {
-      setSaved(!saved);
-      if (onSaveToggle) onSaveToggle(!saved);
-    };
-  
-    return (
-      <div className="d-flex gap-4">
-        <div onClick={handleLike} style={{ cursor: "pointer" }}>
-          {liked ? (
-            <FaHeart color="red" size={iconSize} />
-          ) : (
-            <FaRegHeart color={iconColor} size={iconSize} />
-          )}
-        </div>
-        <div onClick={handleSave} style={{ cursor: "pointer" }}>
-          {saved ? (
-            <FaBookmark color="gold" size={iconSize} />
-          ) : (
-            <FaRegBookmark color={iconColor} size={iconSize} />
-          )}
-        </div>
-      </div>
-    );
-  }
-  
+  recipeId,
+  savedRecipeId = null,
+  defaultLiked = false,
+  defaultSaved = false,
+  iconColor = "black",
+  iconSize = 24,
+  onSaveToggle = () => {},
+  onLikeToggle = () => {},
+}) {
+  const { token } = useContext(AppContext); 
+  const [liked, setLiked] = useState(defaultLiked); // need to work on it later
+  const [saved, setSaved] = useState(defaultSaved);
+
+  const handleSaveClick = async () => {
+    if (!token) return alert("Login required to save recipes.");
+
+    try {
+      if (saved) {
+        // Unsave
+        await deleteSavedRecipe(savedRecipeId, token);
+        setSaved(false);
+        onSaveToggle();
+      } else {
+        // Save
+        await saveRecipe(recipeId, token);
+        setSaved(true);
+        onSaveToggle();
+      }
+    } catch (err) {
+      console.error("Save toggle failed:", err);
+    }
+  };
+
+  const handleLikeClick = () => {
+    const newLiked = !liked;
+    setLiked(newLiked);
+    onLikeToggle(newLiked);
+  };
+
+  return (
+    <div className="d-flex gap-3 align-items-center">
+      {/* Like Icon */}
+      <span onClick={handleLikeClick} style={{ cursor: "pointer" }}>
+        {liked ? (
+          <FaHeart size={iconSize} color="red" />
+        ) : (
+          <FaRegHeart size={iconSize} color={iconColor} />
+        )}
+      </span>
+
+      {/* Save Icon */}
+      <span onClick={handleSaveClick} style={{ cursor: "pointer" }}>
+        {saved ? (
+          <FaBookmark size={iconSize} color="gold" />
+        ) : (
+          <FaRegBookmark size={iconSize} color={iconColor} />
+        )}
+      </span>
+    </div>
+  );
+}

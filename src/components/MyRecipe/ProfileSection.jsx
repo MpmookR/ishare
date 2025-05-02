@@ -1,19 +1,21 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { AppContext } from "../../context/AppContext"; // Ensure correct path
 
-export default function ProfileSection({
-  user,
-  profileImage,
-  isAdmin = false,
-}) {
+export default function ProfileSection({ profileImage, isAdmin = false }) {
   const navigate = useNavigate();
+  const { user } = useContext(AppContext); // Get user from global context
 
+  // Fallback to default image if none provided
   const imageSrc = profileImage || "/img/profile/profileDefault.jpg";
 
-  // Safely fallback to relationship arrays if totals are missing
-  const sharedCount = user?.TotalRecipes ?? user?.Recipes?.length ?? 0;
-  const savedCount = user?.SavedRecipes?.length ?? 0;
-  const totalLikes = user?.totalLikes ?? 0;
+  // Fallback display name
+  const fullName = user?.FullName || "Username";
+
+  // Fetch stats from user object in context (must match your backend DTO fields)
+  const sharedCount = user?.TotalRecipes ?? 0;
+  const savedCount = user?.TotalSavedRecipes ?? 0; 
+  const totalLikes = user?.TotalLikes ?? 0;
 
   return (
     <div
@@ -61,7 +63,7 @@ export default function ProfileSection({
               fontWeight: 400,
             }}
           >
-            {user?.FullName || "Username"}
+            {fullName}
           </div>
 
           <div
@@ -76,19 +78,17 @@ export default function ProfileSection({
             <div>
               Shared: <span style={{ fontWeight: "bold" }}>{sharedCount}</span>
             </div>
-
             <div>
               Saved: <span style={{ fontWeight: "bold" }}>{savedCount}</span>
             </div>
             <div>
-              Total like:{" "}
-              <span style={{ fontWeight: "bold" }}>{totalLikes}</span>
+              Total like: <span style={{ fontWeight: "bold" }}>{totalLikes}</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Right side: Admin Button only */}
+      {/* Right side: Admin Panel button */}
       {isAdmin && (
         <div style={{ display: "flex", justifyContent: "flex-end" }}>
           <button

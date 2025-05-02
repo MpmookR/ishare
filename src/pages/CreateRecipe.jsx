@@ -24,9 +24,7 @@ const CreateRecipe = () => {
     image: "",
   });
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const [showImagePicker, setShowImagePicker] = useState(false);
 
   const categoryOptions = [
     "Breakfast",
@@ -51,33 +49,41 @@ const CreateRecipe = () => {
     "/img/createImg/VanillaFrenchToast.jpg",
   ];
 
-  const [showImagePicker, setShowImagePicker] = useState(false);
-  const [imagePreviews] = useState(imageOptions); // thumbnails
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
-  //it should save to my recipe as well
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    console.log("Submitting recipe...");
-    // console.log("User:", user);
-    // console.log("Token:", token);
-    console.log("Form Data:", form);
-  
+
+    if (!user || !token) {
+      alert("You must be logged in to create a recipe.");
+      return;
+    }
+
     try {
       const imageUrl = form.image.startsWith("http")
         ? form.image
         : `${window.location.origin}${form.image}`;
-  
-      await createRecipe({ ...form, image: imageUrl, userId: user.id }, token);
-  
+
+      const payload = {
+        ...form,
+        image: imageUrl,
+        userId: user.Id,
+      };
+
+      console.log("Submitting recipe payload:", payload);
+
+      await createRecipe(payload, token);
+
       alert("Recipe created successfully!");
-      navigate("/");
+      navigate("/myrecipe");
     } catch (err) {
-      // console.error("API Error:", err.response?.data || err.message);
-      alert("Failed to create recipe.");
+      console.error("Create recipe error:", err);
+      alert("Failed to create recipe. Please try again.");
     }
   };
-  
+
   return (
     <div
       style={{
@@ -220,7 +226,7 @@ const CreateRecipe = () => {
             <ImagePicker
               show={showImagePicker}
               onClose={() => setShowImagePicker(false)}
-              imageList={imagePreviews}
+              imageList={imageOptions}
               selectedImage={form.image}
               onSelect={(url) => setForm({ ...form, image: url })}
             />
@@ -238,4 +244,5 @@ const CreateRecipe = () => {
     </div>
   );
 };
+
 export default CreateRecipe;

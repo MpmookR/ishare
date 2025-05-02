@@ -33,7 +33,7 @@ export default function SavedPage() {
     <div style={{ backgroundColor: "var(--color-bg)", minHeight: "100vh" }}>
       <Navbar />
 
-      <section className="container my-5">
+      {/* <section className="container my-5">
         <h2
           style={{
             fontFamily: "var(--font-body)",
@@ -63,7 +63,7 @@ export default function SavedPage() {
             ))}
           </div>
         )}
-      </section>
+      </section> */}
 
       <Footer />
     </div>

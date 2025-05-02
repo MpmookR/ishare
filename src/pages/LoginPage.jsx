@@ -15,9 +15,13 @@ export default function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { userData, token } = await loginUser(email, password);
+      // Call loginUser to get token and user from backend
+      const { user, token } = await loginUser(email, password);
+
+      // Pass token and user to context login
+      login(token, user);
+
       alert("Login successful!");
-      login(userData, token);
       navigate("/");
     } catch (err) {
       console.error("Login failed:", err);
@@ -45,14 +49,13 @@ export default function LoginPage() {
           />
         </div>
 
-        {/*Form Column */}
-
+        {/* Form Column */}
         <div
           className="col-md-6 d-flex align-items-center justify-content-center"
           style={{
             backgroundColor: "var(--color-bg)",
-            height: "100vh", // ensures this column fills screen height
-            overflow: "hidden", // prevents scrollbars
+            height: "100vh",
+            overflow: "hidden",
           }}
         >
           <div style={{ width: "100%", maxWidth: 400 }}>
@@ -66,8 +69,7 @@ export default function LoginPage() {
               Welcome...
             </h2>
             <p style={{ fontFamily: "var(--font-body)", fontSize: 16 }}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              Please log in to continue.
             </p>
 
             {error && <div className="alert alert-danger">{error}</div>}
