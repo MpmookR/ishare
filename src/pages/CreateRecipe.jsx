@@ -5,8 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Button from "../components/Button";
-import TextField from "../components/recipeForm/TextField";
-// import TextField from "../components/RecipeForm/TextField";
+import TextFieldInput from "../components/recipeForm/TextFieldInput";
 import SelectField from "../components/RecipeForm/SelectField";
 import TextAreaField from "../components/RecipeForm/TextAreaField";
 import ImagePicker from "../components/ImagePicker";
@@ -139,7 +138,7 @@ const CreateRecipe = () => {
               Create a New Recipe
             </h2>
 
-            <TextField
+            <TextFieldInput
               label="Recipe Name"
               name="name"
               value={form.name}
@@ -222,7 +221,6 @@ const CreateRecipe = () => {
                 cursor: "pointer",
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "center",
                 position: "relative",
                 transition: "0.3s",
               }}
