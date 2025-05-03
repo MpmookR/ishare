@@ -2,10 +2,12 @@ import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../context/AppContext"; // Ensure correct path
 
-export default function ProfileSection({ profileImage, isAdmin = false }) {
-  const navigate = useNavigate();
-  const { user } = useContext(AppContext); // Get user from global context
+export default function ProfileSection({ profileImage }) {
+  const { user } = useContext(AppContext);
 
+  const navigate = useNavigate();
+
+  const isAdmin = user?.Roles?.includes("SuperAdmin"); 
   // Fallback to default image if none provided
   const imageSrc = profileImage || "/img/profile/profileDefault.jpg";
 
@@ -15,7 +17,6 @@ export default function ProfileSection({ profileImage, isAdmin = false }) {
   // Fetch stats from user object in context (must match your backend DTO fields)
   const sharedCount = user?.TotalRecipes ?? 0;
   const savedCount = user?.TotalSavedRecipes ?? 0; 
-  const totalLikes = user?.TotalLikes ?? 0;
 
   return (
     <div
@@ -80,9 +81,6 @@ export default function ProfileSection({ profileImage, isAdmin = false }) {
             </div>
             <div>
               Saved: <span style={{ fontWeight: "bold" }}>{savedCount}</span>
-            </div>
-            <div>
-              Total like: <span style={{ fontWeight: "bold" }}>{totalLikes}</span>
             </div>
           </div>
         </div>

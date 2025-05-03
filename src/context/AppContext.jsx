@@ -1,5 +1,8 @@
 import { createContext, useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
+import axios from "axios"; 
+
+const API_URL = import.meta.env.VITE_API_BASE_URL;
 
 // Create the context
 export const AppContext = createContext();
@@ -24,7 +27,7 @@ export const AppProvider = ({ children }) => {
       const isExpired = decoded.exp * 1000 < Date.now();
 
       if (isExpired) {
-        console.warn("⏰ Token expired on reload. Logging out.");
+        console.warn("Token expired on reload. Logging out.");
         logout();
         return;
       }
@@ -32,7 +35,7 @@ export const AppProvider = ({ children }) => {
       setToken(storedToken);
       setUser(JSON.parse(storedUser));
     } catch (err) {
-      console.error("🚨 Invalid token on reload:", err);
+      console.error("Invalid token on reload:", err);
       logout();
     }
   }, []);
@@ -76,8 +79,32 @@ export const AppProvider = ({ children }) => {
     localStorage.setItem("user", JSON.stringify(updatedUser));
   };
 
+  const updateUserFromServer = async () => {
+    if (!token || !user?.Id) return;
+    try {
+      const res = await axios.get(`${API_URL}/account/users/${user.Id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setUser(res.data);
+      localStorage.setItem("user", JSON.stringify(res.data));
+    } catch (err) {
+      console.error("Failed to refresh user data:", err);
+    }
+  };
+
   return (
-    <AppContext.Provider value={{ user, token, login, logout, updateUser }}>
+    <AppContext.Provider
+      value={{
+        user,
+        token,
+        login,
+        logout,
+        updateUser,
+        updateUserFromServer, 
+      }}
+    >
       {children}
     </AppContext.Provider>
   );

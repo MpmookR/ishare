@@ -150,7 +150,7 @@ export default function HighlightCard({
                 likedByCurrentUser={likedByCurrentUser}
                 onSaveToggle={onSaveToggle}
                 onLikeToggle={onLikeToggle}
-                iconColor="black"
+                iconColor="white"
                 iconSize={24}
               />
             </div>

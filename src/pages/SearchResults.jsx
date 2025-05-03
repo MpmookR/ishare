@@ -35,10 +35,18 @@ export default function SearchResults() {
   }, [searchTerm]);
 
   return (
-    <div style={{ backgroundColor: "var(--color-bg)", minHeight: "100vh" }}>
+    <div 
+    style={{
+      backgroundColor: "var(--color-bg)",
+      minHeight: "100vh",
+      display: "flex",
+      flexDirection: "column",
+    }}
+    
+    >
       <Navbar />
 
-      <div className="container py-5">
+      <div className="container py-5" style={{ flex: 1 }}>
         <h2
           style={{
             fontFamily: "var(--font-body)",

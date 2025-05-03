@@ -13,7 +13,9 @@ import RecipeCard from "../components/RecipeCard";
 import PaginationButton from "../components/PaginationButton";
 
 export default function MyRecipe() {
-  const { user, token } = useContext(AppContext);
+  const { user, token, updateUserFromServer } = useContext(AppContext);
+  console.log("user object:", user);
+
   const navigate = useNavigate();
 
   const [recipes, setRecipes] = useState([]);
@@ -25,7 +27,6 @@ export default function MyRecipe() {
   const recipesPerPage = 10;
 
   const isAdmin = user?.roles?.includes("SuperAdmin");
-  const profileImage = user?.profileImage || "/img/profile/profileDefault.jpg";
 
    // Refresh handler: used after save/unsave
    const refreshData = useCallback(() => {
@@ -87,21 +88,27 @@ export default function MyRecipe() {
   const currentRecipes = filteredRecipes.slice(indexOfFirst, indexOfLast);
   const totalPages = Math.ceil(filteredRecipes.length / recipesPerPage);
 
-  // Recipe deletion
-  const handleDelete = async (recipeId) => {
-    if (!token) return alert("Unauthorized.");
+// Recipe deletion
+const handleDelete = async (recipeId) => {
+  if (!token) return alert("Unauthorized.");
 
-    if (window.confirm("Are you sure you want to delete this recipe?")) {
-      try {
-        const result = await deleteRecipe(recipeId, token);
-        console.log("Deleted:", result.message);
-        setRecipes((prev) => prev.filter((r) => r.RecipeId !== recipeId));
-      } catch (err) {
-        console.error("Deletion error:", err);
-        alert(`Failed to delete recipe: ${err.message}`);
-      }
+  if (window.confirm("Are you sure you want to delete this recipe?")) {
+    try {
+      const result = await deleteRecipe(recipeId, token);
+      console.log("Deleted:", result.message);
+
+      // Remove from local UI
+      setRecipes((prev) => prev.filter((r) => r.RecipeId !== recipeId));
+
+      // Refresh user stats (e.g. TotalRecipes)
+      await updateUserFromServer();
+    } catch (err) {
+      console.error("Deletion error:", err);
+      alert(`Failed to delete recipe: ${err.message}`);
     }
-  };
+  }
+};
+
 
   return (
     <div     
@@ -114,12 +121,7 @@ export default function MyRecipe() {
       <Navbar />
 
       <div className="container py-5" style={{ flex: 1 }}>
-        
-        <ProfileSection
-          user={user}
-          profileImage={profileImage}
-          isAdmin={isAdmin}
-        />
+        <ProfileSection/>
 
         {/* View Toggle Buttons */}
         <div className="container d-flex gap-4 my-3">

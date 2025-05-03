@@ -15,21 +15,20 @@ export default function LikeSavedActions({
   onLikeToggle = () => {},
 }) {
   const { user, token } = useContext(AppContext); 
-  const [liked, setLiked] = useState(likedByCurrentUser); 
-  const [saved, setSaved] = useState(defaultSaved);
+  const liked = likedByCurrentUser;
+  const saved = defaultSaved;
+
 
   const handleSaveClick = async () => {
     if (!token) return alert("Login required to save recipes.");
     try {
       if (saved) {
         await deleteSavedRecipe(savedRecipeId, token);
-        setSaved(false);
-        onSaveToggle(false); // optional: pass false for unsaved
       } else {
         await saveRecipe(recipeId, token);
-        setSaved(true);
-        onSaveToggle(true); // optional: pass true for saved
+
       }
+      onSaveToggle?.(); 
     } catch (err) {
       console.error("Save toggle failed:", err);
     }
@@ -40,13 +39,12 @@ export default function LikeSavedActions({
     try {
       if (liked) {
         await unlikeRecipe(recipeId, user.Id, token); 
-        setLiked(false);
-        onLikeToggle(false); // notify parent
+
       } else {
         await likeRecipe(recipeId, token); 
-        setLiked(true);
-        onLikeToggle(true); // notify parent
+
       }
+      onLikeToggle?.();
     } catch (err) {
       console.error("Like toggle failed:", err);
     }

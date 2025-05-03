@@ -1,25 +1,22 @@
 import React from 'react';
 
-export default function TextAreaField({ label, name, value, onChange, placeholder = '', rows = 4 }) {
+export default function TextAreaField({ label, name, value, onChange, placeholder = '', rows = 4, error = false, errorMessage = "" }) {
   return (
-    <div style={{ width: '100%', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', gap: 8, display: 'flex' }}>
-      {/* Label */}
-      <div style={{ alignSelf: 'stretch', paddingLeft: 8, paddingRight: 8, justifyContent: 'center', alignItems: 'center', gap: 10, display: 'flex' }}>
-        <div style={{
-          flex: '1 1 0',
-          color: 'var(--color-black)',
-          fontSize: 'var(--font-size-body)',
-          fontFamily: 'var(--font-body)',
-          fontWeight: 'var(--font-weight-normal)',
-          lineHeight: '21.6px',
-          wordWrap: 'break-word'
-        }}>
-          {label}
-        </div>
-      </div>
+    <div style={{ width: '100%', flexDirection: 'column', gap: 8, display: 'flex' }}>
+      <label style={{ paddingLeft: 8, fontSize: 'var(--font-size-body)', fontFamily: 'var(--font-body)', fontWeight: 500 }}>
+        {label}
+      </label>
 
-      {/* TextArea */}
-      <div style={{ alignSelf: 'stretch', padding: 16, background: 'var(--color-white)', borderRadius: 21, justifyContent: 'flex-start', alignItems: 'center', gap: 10, display: 'flex' }}>
+      <div
+        style={{
+          alignSelf: 'stretch',
+          padding: 16,
+          background: 'var(--color-white)',
+          borderRadius: 21,
+          border: error ? '2px solid red' : 'none',
+          display: 'flex',
+        }}
+      >
         <textarea
           name={name}
           value={value}
@@ -31,16 +28,19 @@ export default function TextAreaField({ label, name, value, onChange, placeholde
             outline: 'none',
             width: '100%',
             background: 'transparent',
-            color: 'var(--color-black)',
-            fontSize: '18px',
+            fontSize: 18,
             fontFamily: 'var(--font-body)',
-            fontWeight: 'var(--font-weight-normal)',
-            lineHeight: '21.6px',
-            wordWrap: 'break-word',
-            resize: 'vertical'
+            resize: 'vertical',
           }}
         />
       </div>
+      {error && (
+        <div
+          style={{ color: "red", marginTop: 6, marginLeft: 8, fontSize: 14 }}
+        >
+          {errorMessage || "This field is required."}
+        </div>
+      )}
     </div>
   );
 }

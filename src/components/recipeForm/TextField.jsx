@@ -1,25 +1,46 @@
-import React from 'react';
+import React from "react";
 
-export default function TextField({ label, name, value, onChange, placeholder = '', type = 'text' }) {
+export default function TextField({
+  label,
+  name,
+  value,
+  onChange,
+  placeholder = "",
+  type = "text",
+  error = false,
+  errorMessage = "",
+}) {
   return (
-    <div style={{ width: '100%', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', gap: 8, display: 'inline-flex' }}>
-      {/* Label */}
-      <div style={{ alignSelf: 'stretch', paddingLeft: 8, paddingRight: 8, justifyContent: 'center', alignItems: 'center', gap: 10, display: 'inline-flex' }}>
-        <div style={{
-          flex: '1 1 0',
-          color: 'var(--color-black)',
-          fontSize: 'var(--font-size-body)',
-          fontFamily: 'var(--font-body)',
-          fontWeight: 'var(--font-weight-normal)',
-          lineHeight: '21.6px',
-          wordWrap: 'break-word'
-        }}>
-          {label}
-        </div>
-      </div>
+    <div
+      style={{
+        width: "100%",
+        flexDirection: "column",
+        gap: 8,
+        display: "inline-flex",
+      }}
+    >
+      <label
+        style={{
+          paddingLeft: 8,
+          fontSize: "var(--font-size-body)",
+          fontFamily: "var(--font-body)",
+          fontWeight: 500,
+        }}
+      >
+        {label}
+      </label>
 
-      {/* Input */}
-      <div style={{ alignSelf: 'stretch', padding: 16, background: 'var(--color-white)', borderRadius: 21, justifyContent: 'flex-start', alignItems: 'center', gap: 10, display: 'inline-flex' }}>
+      <div
+        style={{
+          alignSelf: "stretch",
+          padding: 16,
+          background: "var(--color-white)",
+          borderRadius: 21,
+          border: error ? "2px solid red" : "none",
+          display: "inline-flex",
+          alignItems: "center",
+        }}
+      >
         <input
           type={type}
           name={name}
@@ -27,19 +48,22 @@ export default function TextField({ label, name, value, onChange, placeholder = 
           onChange={onChange}
           placeholder={placeholder}
           style={{
-            border: 'none',
-            outline: 'none',
-            width: '100%',
-            background: 'transparent',
-            color: 'var(--color-black)',
-            fontSize: '18px',
-            fontFamily: 'var(--font-body)',
-            fontWeight: 'var(--font-weight-normal)',
-            lineHeight: '21.6px',
-            wordWrap: 'break-word'
+            border: "none",
+            outline: "none",
+            width: "100%",
+            background: "transparent",
+            fontSize: 18,
+            fontFamily: "var(--font-body)",
           }}
         />
       </div>
+      {error && (
+        <div
+          style={{ color: "red", marginTop: 6, marginLeft: 8, fontSize: 14 }}
+        >
+          {errorMessage || "This field is required."}
+        </div>
+      )}
     </div>
   );
 }

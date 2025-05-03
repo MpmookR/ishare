@@ -116,6 +116,7 @@ export default function HomePage() {
                   likedByCurrentUser: r.Likes?.some((l) => l.UserId === user.Id),
                 }}
                 onSaveToggle={refreshData}
+                onLikeToggle={refreshData}
                 variant={index % 2 !== 0 ? "green" : "blue"}
               />
             ))}
@@ -162,6 +163,7 @@ export default function HomePage() {
                     likedByCurrentUser: r.Likes?.some((l) => l.UserId === user.Id),
                   }}
                   onSaveToggle={refreshData} //refresh callback
+                  onLikeToggle={refreshData}
                 />
               ))}
             </div>

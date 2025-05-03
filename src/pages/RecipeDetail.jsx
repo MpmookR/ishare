@@ -63,8 +63,8 @@ export default function RecipeDetail() {
     >
       <Navbar />
 
-      <div className="container py-5">
-        {/* img + intro */}
+      <div className="container py-5" style={{ flex: 1 }}>
+      {/* img + intro */}
         <div
           className="d-flex gap-5"
           style={{

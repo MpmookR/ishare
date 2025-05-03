@@ -8,6 +8,7 @@ import CreateRecipe from './pages/CreateRecipe';
 import MyRecipe from "./pages/MyRecipe.jsx";
 import RecipeDetail from "./pages/RecipeDetail.jsx";
 import SearchResults from "./pages/SearchResults.jsx";
+import AdminPanel from "./pages/AdminPanel.jsx";
 
 function App() {
   return (
@@ -20,7 +21,7 @@ function App() {
       <Route path="/create" element={<CreateRecipe />} />
       <Route path="/myRecipe" element={<MyRecipe />} />
       <Route path="/recipe/:id" element={<RecipeDetail />} />
-
+      <Route path="/admin/dashboard" element={<AdminPanel />} />
     </Routes>
   );
 }

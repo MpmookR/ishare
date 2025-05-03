@@ -2,7 +2,7 @@ import { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { loginUser } from "../services/authService";
 import { AppContext } from "../context/AppContext";
-import TextField from "../components/TextField";
+import AuthTextField from "../components/AuthTextField";
 import Button from "../components/Button";
 
 export default function LoginPage() {
@@ -75,7 +75,7 @@ export default function LoginPage() {
             {error && <div className="alert alert-danger">{error}</div>}
 
             <form onSubmit={handleSubmit} className="mt-4">
-              <TextField
+              <AuthTextField
                 id="email"
                 label="Email"
                 type="email"
@@ -85,7 +85,7 @@ export default function LoginPage() {
               />
 
               <div className="mt-3">
-                <TextField
+                <AuthTextField
                   id="password"
                   label="Password"
                   type="password"

@@ -12,8 +12,11 @@ import ImagePicker from "../components/ImagePicker";
 import { MdAddPhotoAlternate } from "react-icons/md";
 
 const CreateRecipe = () => {
-  const { token, user } = useContext(AppContext);
+  const { token, user, updateUserFromServer } = useContext(AppContext);
   const navigate = useNavigate();
+
+
+  const [formErrors, setFormErrors] = useState({}); // handle error
 
   const [form, setForm] = useState({
     name: "",
@@ -61,6 +64,21 @@ const CreateRecipe = () => {
       return;
     }
 
+    // Basic field validation
+    const errors = {};
+    if (!form.name.trim()) errors.name = 'Recipe Name is required.';
+    if (!form.category.trim()) errors.category = 'Category is required.';
+    if (!form.intro.trim()) errors.intro = 'About is required.';
+    if (!form.ingredients.trim()) errors.ingredients = 'Ingredients are required.';
+    if (!form.howTo.trim()) errors.howTo = 'Instructions are required.';
+    if (!form.image.trim()) errors.image = 'Image must be selected.';
+    setFormErrors(errors);
+    
+    if (Object.keys(errors).length > 0) {
+      alert("Please fill out all required fields.");
+      return;
+    }
+
     try {
       const imageUrl = form.image.startsWith("http")
         ? form.image
@@ -75,6 +93,8 @@ const CreateRecipe = () => {
       console.log("Submitting recipe payload:", payload);
 
       await createRecipe(payload, token);
+
+      await updateUserFromServer();
 
       alert("Recipe created successfully!");
       navigate("/myrecipe");
@@ -124,6 +144,8 @@ const CreateRecipe = () => {
               value={form.name}
               onChange={handleChange}
               placeholder="Grilled Chicken Salad"
+              error={!!formErrors.name}
+              errorMessage={formErrors.name}              
             />
 
             <SelectField
@@ -137,6 +159,8 @@ const CreateRecipe = () => {
                 })
               }
               options={categoryOptions}
+              error={!!formErrors.category}
+              errorMessage={formErrors.category}     
             />
 
             <TextAreaField
@@ -145,6 +169,9 @@ const CreateRecipe = () => {
               value={form.intro}
               onChange={handleChange}
               placeholder="Intro must be a maximum of 300 characters"
+              error={!!formErrors.intro}
+              errorMessage={formErrors.intro}
+
             />
 
             <TextAreaField
@@ -153,6 +180,8 @@ const CreateRecipe = () => {
               value={form.ingredients}
               onChange={handleChange}
               placeholder="List ingredients here"
+              error={!!formErrors.ingredients}
+              errorMessage={formErrors.ingredients}
             />
 
             <TextAreaField
@@ -161,6 +190,8 @@ const CreateRecipe = () => {
               value={form.howTo}
               onChange={handleChange}
               placeholder="Write cooking instructions here"
+              error={!!formErrors.howTo}
+              errorMessage={formErrors.howTo}
             />
           </div>
 

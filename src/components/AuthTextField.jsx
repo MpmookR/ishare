@@ -1,4 +1,10 @@
-export default function TextField({ id, label, type = 'text', value, onChange, placeholder }) {
+export default function AuthTextField({ 
+  id, label, 
+  type = 'text', 
+  value, 
+  onChange, 
+  placeholder,
+}) {
   return (
     <div style={{ width: '100%' }}>
       <label htmlFor={id} style={{
@@ -10,7 +16,8 @@ export default function TextField({ id, label, type = 'text', value, onChange, p
         fontWeight: 500,
         color: 'black',
         lineHeight: '21.6px',
-      }}>{label}</label>
+      }}>{label}
+      </label>
 
       <div style={{
         width: '100%',
@@ -20,6 +27,7 @@ export default function TextField({ id, label, type = 'text', value, onChange, p
         display: 'flex',
         alignItems: 'center',
         gap: 10,
+
       }}>
         <input
           id={id}

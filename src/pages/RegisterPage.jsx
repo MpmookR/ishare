@@ -2,7 +2,7 @@ import { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { registerUser } from '../services/authService';
 import { AppContext } from '../context/AppContext';
-import TextField from '../components/TextField';
+import AuthTextField from "../components/AuthTextField";
 import Button from '../components/Button';
 
 export default function RegisterPage() {
@@ -13,17 +13,25 @@ export default function RegisterPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const data = await registerUser({ username, email, password });
-      login(data, data.token);
-      navigate('/');
-    } catch {
-      setError('Registration failed. Email may already be in use.');
+      const data = await registerUser({ fullName: username, email, password });
+      setSuccess("Successfully registered. Please check your email for verification before logging in.");
+      setError('');
+  
+      setTimeout(() => {
+        navigate("/login");
+      }, 8000);
+    } catch (err) {
+      console.error("Registration failed:", err.response?.data);
+      setError("Registration failed. Email may already be in use.");
+      setSuccess('');
     }
   };
+  
 
   return (
     <div className="container-fluid p-0">
@@ -62,9 +70,10 @@ export default function RegisterPage() {
             </p>
 
             {error && <div className="alert alert-danger">{error}</div>}
+            {success && <div className="alert alert-success">{success}</div>}
 
             <form onSubmit={handleSubmit} className="mt-4">
-              <TextField
+              <AuthTextField
                 id="username"
                 label="Full Name"
                 value={username}
@@ -73,7 +82,7 @@ export default function RegisterPage() {
               />
 
               <div className="mt-3">
-                <TextField
+                <AuthTextField
                   id="email"
                   label="Email"
                   type="email"
@@ -84,7 +93,7 @@ export default function RegisterPage() {
               </div>
 
               <div className="mt-3">
-                <TextField
+                <AuthTextField
                   id="password"
                   label="Password"
                   type="password"
