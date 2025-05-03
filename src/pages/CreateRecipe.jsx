@@ -6,8 +6,8 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Button from "../components/Button";
 import TextFieldInput from "../components/recipeForm/TextFieldInput";
-import SelectField from "../components/RecipeForm/SelectField";
-import TextAreaField from "../components/RecipeForm/TextAreaField";
+import SelectField from "../components/recipeForm/SelectField";
+import TextAreaField from "../components/recipeForm/TextAreaField";
 import ImagePicker from "../components/ImagePicker";
 import { MdAddPhotoAlternate } from "react-icons/md";
 
