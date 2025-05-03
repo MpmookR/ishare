@@ -83,5 +83,13 @@ body {
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
 }
 
+.hero-circle {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hero-circle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(232, 92, 37, 0.6); /* glow effect */
+}
 
 

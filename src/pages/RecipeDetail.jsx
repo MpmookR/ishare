@@ -6,6 +6,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import LikeSavedActions from "../components/LikeSavedAction";
 import { AppContext } from "../context/AppContext";
+import CommentSection from "../components/CommentSection";
 
 export default function RecipeDetail() {
   const { id } = useParams();
@@ -243,8 +244,12 @@ export default function RecipeDetail() {
             </div>
           </div>
         </div>
+             {/* Comment Section */}
+      <div className="container my-5">
+      <CommentSection recipeId={recipe.RecipeId} initialComments={recipe.Comments} />
       </div>
 
+      </div>
       <Footer />
     </div>
   );

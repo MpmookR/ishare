@@ -54,7 +54,7 @@ export default function HeroSection() {
               style={{
                 position: "absolute",
                 inset: 0,
-                backgroundColor: "rgba(2, 76, 75, 0.91)",
+                backgroundColor: "var(--color-primary-green)",
                 zIndex: 1,
               }}
             />
@@ -77,6 +77,7 @@ export default function HeroSection() {
             >
               {/* Orange Circle with Plus Sign */}
               <div
+                className="hero-circle"
                 style={{
                   width: "120px",
                   height: "120px",
@@ -86,9 +87,7 @@ export default function HeroSection() {
                   justifyContent: "center",
                   alignItems: "center",
                   boxShadow: "3px 4px 14px rgba(0, 0, 0, 0.15)",
-                  transition: "transform 0.3s ease",
                 }}
-                className="hover-effect"
               >
                 <FiPlus size={60} color="#fff" style={{ fontWeight: "bold" }} />
               </div>
