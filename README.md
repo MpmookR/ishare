@@ -9,9 +9,11 @@ The app is built using React and integrates a backend API for user authenticatio
 - Commenting: Users can comment on recipes they like.
 
 🍍 Tech Stack
-Frontend: React, React Router, Vite
-Backend: https://github.com/MpmookR/homeCookAPI
-Styles: Bootstrap, custom CSS for layout
+- Frontend: React, React Router, Vite
+- Backend: https://github.com/MpmookR/homeCookAPI
+- Frontend Live: https://zippy-cranachan-12b890.netlify.app
+- Backend Live: https://homecookapi.onrender.com
+- Styles: Bootstrap, custom CSS for layout
 
 🍳 Installation
 To run the project locally, follow these steps:
@@ -28,8 +30,6 @@ To run the project locally, follow these steps:
         REACT_APP_API_URL=http://localhost:5000
         REACT_APP_FIREBASE_API_KEY=your_firebase_api_key
 
-🍯 Run the development server: npm run dev
-🍝 Running Tests: npm run test
 
 
 
