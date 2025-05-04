@@ -1,4 +1,3 @@
-// src/api.js
 import axios from 'axios';
 
 // Create a reusable Axios instance for the entire app
