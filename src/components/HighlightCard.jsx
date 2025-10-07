@@ -3,12 +3,7 @@ import LikeSavedActions from "./LikeSavedAction";
 import { useContext } from "react";
 import { AppContext } from "../context/AppContext";
 
-export default function HighlightCard({
-  recipe,
-  variant = "blue",
-  onSaveToggle = () => {},
-  onLikeToggle = () => {},
-}) {
+export default function HighlightCard({ recipe, variant = "blue", onSaveToggle = () => {}, onLikeToggle = () => {}, }) {
   const navigate = useNavigate();
   const { user } = useContext(AppContext);
 
@@ -24,7 +19,7 @@ export default function HighlightCard({
 
   return (
     <div
-      className="highlight-card flex-shrink-0"
+      className="highlight-card"
       style={{
         width: "100%",
         maxWidth: 380,
@@ -41,10 +36,10 @@ export default function HighlightCard({
     >
       <div
         style={{
-          padding: 24,
+          padding: 16,
           display: "flex",
           flexDirection: "column",
-          gap: 24,
+          gap: 16,
           height: "100%",
           boxSizing: "border-box",
         }}

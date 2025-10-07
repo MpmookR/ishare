@@ -28,46 +28,47 @@ export default function MyRecipe() {
 
   const isAdmin = user?.roles?.includes("SuperAdmin");
 
-   // Refresh handler: used after save/unsave
-   const refreshData = useCallback(() => {
+  // Refresh handler: used after save/unsave
+  const refreshData = useCallback(() => {
     setDataVersion((v) => v + 1);
   }, []);
 
- // Fetches recipe list 
- useEffect(() => {
-  const load = async () => {
-    try {
-      const allRecipes = await fetchRecipes();
-      let savedRecipeRefs = [];
+  // Fetches recipe list
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const allRecipes = await fetchRecipes();
+        let savedRecipeRefs = [];
 
-      if (user?.Id && token) {
-        savedRecipeRefs = await fetchSavedRecipes(user.Id, token);
+        if (user?.Id && token) {
+          savedRecipeRefs = await fetchSavedRecipes(user.Id, token);
+        }
+
+        const recipesWithSavedState = allRecipes.map((r) => {
+          const match = savedRecipeRefs.find((s) => s.RecipeId === r.RecipeId);
+          const likedByCurrentUser =
+            Array.isArray(r.Likes) && user?.Id
+              ? r.Likes.some((l) => l.UserId === user.Id)
+              : false;
+
+          return {
+            ...r,
+            defaultSaved: !!match, // used by LikeSavedActions
+            SavedRecipeId: match?.SavedRecipeId || null, // for unsave
+            likedByCurrentUser,
+          };
+        });
+
+        setRecipes(recipesWithSavedState);
+        setSavedRecipeIds(savedRecipeRefs.map((s) => s.RecipeId)); // used for filtering
+      } catch (error) {
+        console.error("Error loading data:", error);
       }
+    };
 
-      const recipesWithSavedState = allRecipes.map((r) => {
-        const match = savedRecipeRefs.find((s) => s.RecipeId === r.RecipeId);
-        const likedByCurrentUser = Array.isArray(r.Likes) && user?.Id
-        ? r.Likes.some((l) => l.UserId === user.Id)
-        : false;
+    load();
+  }, [dataVersion, user?.Id, token]); // reloads when refreshData is triggered
 
-        return {
-          ...r,
-          defaultSaved: !!match, // used by LikeSavedActions
-          SavedRecipeId: match?.SavedRecipeId || null, // for unsave
-          likedByCurrentUser, 
-        };
-      });
-
-      setRecipes(recipesWithSavedState);
-      setSavedRecipeIds(savedRecipeRefs.map((s) => s.RecipeId)); // used for filtering
-    } catch (error) {
-      console.error("Error loading data:", error);
-    }
-  };
-
-  load();
-}, [dataVersion, user?.Id, token]); // reloads when refreshData is triggered
-  
   // View filter logic
   const filteredRecipes = recipes.filter((recipe) => {
     const isOwned = recipe.UserId === user?.Id;
@@ -88,40 +89,40 @@ export default function MyRecipe() {
   const currentRecipes = filteredRecipes.slice(indexOfFirst, indexOfLast);
   const totalPages = Math.ceil(filteredRecipes.length / recipesPerPage);
 
-// Recipe deletion
-const handleDelete = async (recipeId) => {
-  if (!token) return alert("Unauthorized.");
+  // Recipe deletion
+  const handleDelete = async (recipeId) => {
+    if (!token) return alert("Unauthorized.");
 
-  if (window.confirm("Are you sure you want to delete this recipe?")) {
-    try {
-      const result = await deleteRecipe(recipeId, token);
-      console.log("Deleted:", result.message);
+    if (window.confirm("Are you sure you want to delete this recipe?")) {
+      try {
+        const result = await deleteRecipe(recipeId, token);
+        console.log("Deleted:", result.message);
 
-      // Remove from local UI
-      setRecipes((prev) => prev.filter((r) => r.RecipeId !== recipeId));
+        // Remove from local UI
+        setRecipes((prev) => prev.filter((r) => r.RecipeId !== recipeId));
 
-      // Refresh user stats (e.g. TotalRecipes)
-      await updateUserFromServer();
-    } catch (err) {
-      console.error("Deletion error:", err);
-      alert(`Failed to delete recipe: ${err.message}`);
+        // Refresh user stats (e.g. TotalRecipes)
+        await updateUserFromServer();
+      } catch (err) {
+        console.error("Deletion error:", err);
+        alert(`Failed to delete recipe: ${err.message}`);
+      }
     }
-  }
-};
-
+  };
 
   return (
-    <div     
-    style={{
-      backgroundColor: "var(--color-bg)",
-      minHeight: "100vh",
-      display: "flex",
-      flexDirection: "column",
-    }}>
+    <div
+      style={{
+        backgroundColor: "var(--color-bg)",
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <Navbar />
 
       <div className="container py-5" style={{ flex: 1 }}>
-        <ProfileSection/>
+        <ProfileSection />
 
         {/* View Toggle Buttons */}
         <div className="container d-flex gap-4 my-3">
@@ -172,8 +173,7 @@ const handleDelete = async (recipeId) => {
                 showDelete={viewMode === "my"}
                 onDelete={handleDelete}
                 onSaveToggle={refreshData} //Trigger refresh after unsave/save
-                onLikeToggle={refreshData} 
-
+                onLikeToggle={refreshData}
               />
             ))
           ) : (

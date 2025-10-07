@@ -1,4 +1,4 @@
-import api from "./api"; // Your Axios instance
+import api from "./api"; //  Axios instance
 
 export const likeRecipe = async (recipeId, token) => {
   try {

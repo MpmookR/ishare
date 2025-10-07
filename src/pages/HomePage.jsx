@@ -23,7 +23,6 @@ export default function HomePage() {
   const refreshData = useCallback(() => {
     setDataVersion((v) => v + 1);
   }, []);
-  
 
   // Filtered recipes pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -45,6 +44,18 @@ export default function HomePage() {
     logout();
     navigate("/login");
   };
+
+  // user is null if not logged in
+  const uid = user?.Id ?? null;
+
+  const decorate = (r) => ({
+    ...r,
+    defaultSaved: !!uid && !!r.SavedRecipes?.some((sr) => sr.UserId === uid),
+    SavedRecipeId: uid
+      ? r.SavedRecipes?.find((sr) => sr.UserId === uid)?.SavedRecipeId
+      : undefined,
+    likedByCurrentUser: !!uid && !!r.Likes?.some((l) => l.UserId === uid),
+  });
 
   useEffect(() => {
     const loadData = async () => {
@@ -105,16 +116,7 @@ export default function HomePage() {
             {featuredRecipes.map((r, index) => (
               <HighlightCard
                 key={`${r.RecipeId}-${index}`}
-                recipe={{
-                  ...r,
-                  defaultSaved: r.SavedRecipes?.some(
-                    (sr) => sr.UserId === user.Id
-                  ),
-                  SavedRecipeId: r.SavedRecipes?.find(
-                    (sr) => sr.UserId === user.Id
-                  )?.SavedRecipeId,
-                  likedByCurrentUser: r.Likes?.some((l) => l.UserId === user.Id),
-                }}
+                recipe={decorate(r)}
                 onSaveToggle={refreshData}
                 onLikeToggle={refreshData}
                 variant={index % 2 !== 0 ? "green" : "blue"}
@@ -152,17 +154,8 @@ export default function HomePage() {
               {currentRecipes.map((r) => (
                 <RecipeCard
                   key={r.RecipeId}
-                  recipe={{
-                    ...r,
-                    defaultSaved: r.SavedRecipes?.some(
-                      (sr) => sr.UserId === user.Id
-                    ),
-                    SavedRecipeId: r.SavedRecipes?.find(
-                      (sr) => sr.UserId === user.Id
-                    )?.SavedRecipeId,
-                    likedByCurrentUser: r.Likes?.some((l) => l.UserId === user.Id),
-                  }}
-                  onSaveToggle={refreshData} //refresh callback
+                  recipe={decorate(r)}
+                  onSaveToggle={refreshData}
                   onLikeToggle={refreshData}
                 />
               ))}

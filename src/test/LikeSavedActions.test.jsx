@@ -25,8 +25,9 @@ describe('LikeSavedActions', () => {
     const { container } = renderWithContext({ recipeId: 1, likedByCurrentUser: false });
     const icons = container.querySelectorAll('svg');
     const likeIcon = icons[0];
-    fireEvent.click(likeIcon);
-    expect(likeService.likeRecipe).toHaveBeenCalledWith(1, token);
+    fireEvent.click(likeIcon); //Simulates user actions
+    expect(likeService.likeRecipe).toHaveBeenCalledWith(1, token); 
+    //confirm that correct API functions were triggered.
   });
 
   it('calls unlikeRecipe when already liked and like icon is clicked', async () => {

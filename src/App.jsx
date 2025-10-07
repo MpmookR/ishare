@@ -13,7 +13,20 @@ import AdminPanel from "./pages/AdminPanel.jsx";
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<PrivateRoute><HomePage /></PrivateRoute>} />
+      {/* PUBLIC */}
+      <Route path="/" element={<HomePage />} />
+      <Route path="/recipe/:id" element={<RecipeDetail />} />
+      <Route path="/search" element={<SearchResults />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
+
+      {/* PROTECTED */}
+      <Route path="/saved" element={<PrivateRoute><SavedPage /></PrivateRoute>} />
+      <Route path="/create" element={<PrivateRoute><CreateRecipe /></PrivateRoute>} />
+      <Route path="/myRecipe" element={<PrivateRoute><MyRecipe /></PrivateRoute>} />
+      <Route path="/admin/dashboard" element={<PrivateRoute><AdminPanel /></PrivateRoute>} />
+
+      {/* <Route path="/" element={<PrivateRoute><HomePage /></PrivateRoute>} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/search" element={<SearchResults />} /> 
@@ -21,7 +34,7 @@ function App() {
       <Route path="/create" element={<CreateRecipe />} />
       <Route path="/myRecipe" element={<MyRecipe />} />
       <Route path="/recipe/:id" element={<RecipeDetail />} />
-      <Route path="/admin/dashboard" element={<AdminPanel />} />
+      <Route path="/admin/dashboard" element={<AdminPanel />} /> */}
     </Routes>
   );
 }

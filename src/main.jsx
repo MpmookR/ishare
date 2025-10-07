@@ -1,5 +1,3 @@
-// src/main.jsx
-
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
@@ -13,7 +11,6 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import App from './App.jsx';
 import { AppProvider } from './context/AppContext.jsx';
 
-//  React 18 entry point
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <AppProvider>

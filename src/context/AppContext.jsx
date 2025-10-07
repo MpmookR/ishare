@@ -5,9 +5,11 @@ import axios from "axios";
 const API_URL = import.meta.env.VITE_API_BASE_URL;
 
 // Create the context
+//This is the React Context. 
+// use it with useContext(AppContext) to access shared values like user, token
 export const AppContext = createContext();
 
-// Context provider component
+// Context provider component. It wraps the app in main.jsx
 export const AppProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
     const storedUser = localStorage.getItem("user");
@@ -24,6 +26,7 @@ export const AppProvider = ({ children }) => {
 
     try {
       const decoded = jwtDecode(storedToken);
+      //Compares it with the current time to check if the token has expired.
       const isExpired = decoded.exp * 1000 < Date.now();
 
       if (isExpired) {
